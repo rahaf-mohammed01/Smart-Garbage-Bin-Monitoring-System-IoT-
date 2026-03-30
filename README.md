@@ -4,7 +4,7 @@ A smart, touch-free garbage bin using Arduino, ultrasonic sensor, and servo moto
 
 ---
 
-## 📌 Overview
+## Overview
 The Smart Garbage Bin Monitoring System is an IoT-based project designed to improve hygiene and efficiency in waste management. The system automatically opens the bin lid when a user approaches, reducing the need for physical contact.
 
 This project demonstrates how simple hardware components can be used to create smart, real-world solutions aligned with modern smart city concepts.
