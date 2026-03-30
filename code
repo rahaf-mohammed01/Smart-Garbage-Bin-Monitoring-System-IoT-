@@ -1,0 +1,74 @@
+#include <Servo.h>
+
+Servo myServo;
+
+// Pins
+const int servoPin = 9;
+const int trigPin = 10;
+const int echoPin = 11;
+
+// Adjust these based on your servo direction
+const int closePos = 0;   // Lid down
+const int openPos = 180;   // Lid open (adjust as needed)
+
+const int openThreshold = 20; // cm
+
+bool isOpen = false;
+
+void setup() {
+  myServo.attach(servoPin);
+  myServo.write(closePos); // Start closed
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int distance = measureDistance();
+
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  if (distance > 0 && distance < openThreshold) {
+    if (!isOpen) {
+      openTrash();
+      isOpen = true;
+    }
+  } else {
+    if (isOpen) {
+      closeTrash();
+      isOpen = false;
+    }
+  }
+
+  delay(200);
+}
+
+int measureDistance() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH, 30000); // 30ms timeout
+  if (duration == 0) return -1;
+
+  int distance = duration * 0.034 / 2;
+  return distance;
+}
+
+void openTrash() {
+  for (int pos = closePos; pos <= openPos; pos += 2) {
+    myServo.write(pos);
+    delay(10);
+  }
+}
+
+void closeTrash() {
+  for (int pos = openPos; pos >= closePos; pos -= 2) {
+    myServo.write(pos);
+    delay(10);
+  }
+}
